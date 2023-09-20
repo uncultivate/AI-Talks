@@ -4,8 +4,6 @@ from random import randrange
 import streamlit as st
 from src.styles.menu_styles import FOOTER_STYLES, HEADER_STYLES
 from src.utils.conversation import show_conversation, show_chat_buttons, show_conversation2, show_conversation3, clear_chat
-from src.utils.footer import show_charts, show_info
-from src.utils.helpers import get_files_in_dir, get_random_img
 from src.utils.lang import en
 from streamlit_option_menu import option_menu
 import streamlit as st
@@ -587,8 +585,7 @@ def run_agi():
             stock_dir = "Down" if st.session_state['asx_200_change'] < 0 else "Up"
             st.write(f"{stock_dir} {round(st.session_state['asx_200_change'],2)} points ({round(100*(1 - st.session_state['prev_asx_200']/st.session_state['asx_200']),2)}%) in the past month")
             plot_asx_200(st.session_state['asx_200'] - st.session_state['asx_200_change'], st.session_state['asx_200'], 1)
-        case _:
-            show_info(tg_svg)
+
 
 
 
