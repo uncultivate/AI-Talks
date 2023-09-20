@@ -3,8 +3,6 @@ from pathlib import Path
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from .constants import BUG_REPORT_URL, REPO_URL
-from .helpers import render_svg
 import pandas as pd
 import numpy as np
 import random
