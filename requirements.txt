@@ -1,4 +1,4 @@
-conda
+pip>=23.1.2
 streamlit>=1.22.0
 streamlit-chat>=0.0.2.2
 streamlit_option_menu>=0.3.2
@@ -12,3 +12,4 @@ numpy
 random
 math
 time
+plotly

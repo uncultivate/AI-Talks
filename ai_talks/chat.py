@@ -5,9 +5,10 @@ from src.styles.menu_styles import FOOTER_STYLES, HEADER_STYLES
 from src.utils.conversation import show_conversation, show_chat_buttons, show_conversation2, show_conversation3, clear_chat
 from src.utils.lang import en
 from streamlit_option_menu import option_menu
-import streamlit as st
-#from matplotlib import pyplot as plt
-import matplotlib.dates as mdates
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+import numpy as np
 import pandas as pd
 import numpy as np
 import random
@@ -516,33 +517,54 @@ def plot_asx_200(start_value, end_value, seed=None):
     asx_200_values[0] = start_value
     
     df = pd.DataFrame({'Date': dates, 'ASX 200': asx_200_values})
-    
-    fig, ax = plt.subplots()
+        
+    # Create Plotly Figure
+    fig = go.Figure()
 
-    # Set dark background
-    ax.set_facecolor('none')  # Make the axis background transparent
-    fig.patch.set_facecolor('none')  # Make the figure background transparent
+    # Add area plot
+    fig.add_trace(go.Scatter(
+        x=df['Date'],
+        y=df['ASX 200'],
+        mode='lines',
+        line=dict(width=0.5, color='Slateblue'),
+        stackgroup='one',
+        fill='tozeroy',
+        name='ASX 200 Area',
+        showlegend=False 
+    ))
 
-    # Set text and line colors to light color for visibility against dark background
-    ax.tick_params(axis='both', colors='white')
-    ax.xaxis.label.set_color('white')
-    ax.yaxis.label.set_color('white')
-    ax.title.set_color('white')
+    # Add line plot
+    fig.add_trace(go.Scatter(
+        x=df['Date'],
+        y=df['ASX 200'],
+        mode='lines',
+        line=dict(color='Slateblue'),
+        showlegend=False 
+    ))
 
-    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d %b'))
-
-    ax.fill_between(df['Date'], df['ASX 200'], color="skyblue", alpha=0.4)
-    ax.plot(df['Date'], df['ASX 200'], color="Slateblue", alpha=0.6)
-
-    # Remove x-axis margins to extend the line to the sides of the chart
-    ax.set_xlim(df['Date'].iloc[0], df['Date'].iloc[-1])
-    plt.ylim(min(df['ASX 200']) - 50, max(df['ASX 200']) + 50)
-    plt.grid(True)
-
-
-
-    st.pyplot(fig)
+    y_min = min(df['ASX 200']) - 100
+    y_max = max(df['ASX 200']) + 100
+    # Customize layout
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        
+        xaxis=dict(
+            tickformat='%d %b',
+            tickfont=dict(
+                color='white'
+            )
+        ),
+        yaxis=dict(
+        range=[y_min, y_max],
+        tickfont=dict(
+            color='white'
+        )
+        
+    )
+    )
+    # Display Plotly chart in Streamlit
+    st.plotly_chart(fig)
 
 def run_agi():
     st.session_state.locale = en

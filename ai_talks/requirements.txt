@@ -12,3 +12,4 @@ numpy
 random
 math
 time
+plotly
