@@ -13,3 +13,4 @@ random
 math
 time
 plotly.graph_objects
+plotly

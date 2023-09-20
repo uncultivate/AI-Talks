@@ -12,4 +12,5 @@ numpy
 random
 math
 time
+plotly
 plotly.graph_objects
