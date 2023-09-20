@@ -6,7 +6,7 @@ from src.utils.conversation import show_conversation, show_chat_buttons, show_co
 from src.utils.lang import en
 from streamlit_option_menu import option_menu
 import streamlit as st
-import matplotlib.pyplot as plt
+import matplotlib
 #import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
