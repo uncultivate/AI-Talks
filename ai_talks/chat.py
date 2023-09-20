@@ -5,7 +5,6 @@ from src.styles.menu_styles import FOOTER_STYLES, HEADER_STYLES
 from src.utils.conversation import show_conversation, show_chat_buttons, show_conversation2, show_conversation3, clear_chat
 from src.utils.lang import en
 from streamlit_option_menu import option_menu
-import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
