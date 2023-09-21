@@ -5,8 +5,7 @@ from src.styles.menu_styles import FOOTER_STYLES, HEADER_STYLES
 from src.utils.conversation import show_conversation, show_chat_buttons, show_conversation2, show_conversation3, clear_chat
 from src.utils.lang import en
 from streamlit_option_menu import option_menu
-import plotly
-#import plotly.graph_objects as go
+import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 import pandas as pd
@@ -542,6 +541,8 @@ def plot_asx_200(start_value, end_value, seed=None):
         showlegend=False 
     ))
 
+
+
     y_min = min(df['ASX 200']) - 100
     y_max = max(df['ASX 200']) + 100
     # Customize layout
@@ -554,6 +555,12 @@ def plot_asx_200(start_value, end_value, seed=None):
             tickfont=dict(
                 color='white'
             )
+        ),
+        margin=go.layout.Margin(
+            l=0, #left margin
+            r=0, #right margin
+            b=0, #bottom margin
+            t=0, #top margin
         ),
         yaxis=dict(
         range=[y_min, y_max],
