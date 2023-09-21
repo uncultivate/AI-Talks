@@ -1,5 +1,6 @@
-pip>=23.2.1
+pip>=22.3.1
 plotly
+plotly.graph_objects
 streamlit>=1.22.0
 streamlit-chat>=0.0.2.2
 streamlit_option_menu>=0.3.2
