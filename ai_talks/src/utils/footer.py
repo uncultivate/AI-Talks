@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import random
 import math
+import plotly.graph_objects as go
 
 
 def show_info(icon: Path) -> None:
@@ -24,41 +25,91 @@ def show_info(icon: Path) -> None:
 
 
 
-def show_charts() -> None:
-    def plot_asx_200():
-        dates = pd.date_range(end=pd.Timestamp.today(), periods=30, freq='D')
-        start_value = 7000
-        random_changes = np.random.normal(loc=0, scale=50, size=len(dates))
-        asx_200_values = np.cumsum(random_changes) + start_value
-        df = pd.DataFrame({'Date': dates, 'ASX 200': asx_200_values})
-        direction = 'Down' if asx_200_values[0] > asx_200_values[-1] else 'Up'
-        st.write(f"{direction} {round(asx_200_values[-1] - asx_200_values[0])} points ({round(1 - asx_200_values[0]/asx_200_values[-1],2)}%) in the past month")
-        fig, ax = plt.subplots()
 
-        # Set dark background
-        ax.set_facecolor('none')  # Make the axis background transparent
-        fig.patch.set_facecolor('none')  # Make the figure background transparent
+def plot_asx_200(start_value, end_value, seed=None):
+    # Set the random seed for reproducibility
+    if seed is not None:
+        np.random.seed(seed)
+        
+    dates = pd.date_range(end=pd.Timestamp.today(), periods=30, freq='D')
+    
+    # Generate random noise
+    random_noise = np.random.normal(loc=0, scale=end_value/200, size=len(dates))
+    
+    # Create a series of changes that trend from the start_value to the end_value
+    linear_trend = np.linspace(start_value, end_value, len(dates))
+    
+    # Add a sinusoidal wave to the linear trend
+    wave_amplitude = end_value/100  # Amplitude of the wave
+    wave_frequency = 2 * np.pi / 15  # Frequency of the wave, 2*pi/period
+    sinusoidal_wave = wave_amplitude * np.sin(wave_frequency * np.arange(len(dates)))
 
-        # Set text and line colors to light color for visibility against dark background
-        ax.tick_params(axis='both', colors='white')
-        ax.xaxis.label.set_color('white')
-        ax.yaxis.label.set_color('white')
-        ax.title.set_color('white')
+    # Combine the linear trend, sinusoidal wave, and random noise
+    asx_200_values = linear_trend + sinusoidal_wave + random_noise
+    
+    # Ensure the last value is exactly the end_value
+    asx_200_values[-1] = end_value
+    
+    # Ensure the first value is exactly the start_value
+    asx_200_values[0] = start_value
+    
+    df = pd.DataFrame({'Date': dates, 'ASX 200': asx_200_values})
+        
+    # Create Plotly Figure
+    fig = go.Figure()
 
-        ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=1))
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%d %b'))
+    # Add area plot
+    fig.add_trace(go.Scatter(
+        x=df['Date'],
+        y=df['ASX 200'],
+        mode='lines',
+        line=dict(width=0.5, color='Slateblue'),
+        stackgroup='one',
+        fill='tozeroy',
+        name='ASX 200 Area',
+        showlegend=False 
+    ))
 
-        ax.fill_between(df['Date'], df['ASX 200'], color="skyblue", alpha=0.4)
-        ax.plot(df['Date'], df['ASX 200'], color="Slateblue", alpha=0.6)
+    # Add line plot
+    fig.add_trace(go.Scatter(
+        x=df['Date'],
+        y=df['ASX 200'],
+        mode='lines',
+        line=dict(color='Slateblue'),
+        showlegend=False 
+    ))
 
-        # Remove x-axis margins to extend the line to the sides of the chart
-        ax.set_xlim(df['Date'].iloc[0], df['Date'].iloc[-1])
-        plt.ylim(min(df['ASX 200']) - 50, max(df['ASX 200']) + 50)
-        plt.grid(True)
 
-        st.pyplot(fig)
 
-    # Streamlit app
-    st.title('S&P / ASX 200')
-    plot_asx_200()
+    y_min = min(df['ASX 200']) - 100
+    y_max = max(df['ASX 200']) + 100
+    # Customize layout
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        
+        xaxis=dict(
+            tickformat='%d %b',
+            tickfont=dict(
+                color='white'
+            )
+        ),
+        margin=go.layout.Margin(
+            l=0, #left margin
+            r=0, #right margin
+            b=0, #bottom margin
+            t=0, #top margin
+        ),
+        yaxis=dict(
+        range=[y_min, y_max],
+        tickfont=dict(
+            color='white'
+        )
+        
+    )
+    )
+    # Display Plotly chart in Streamlit
+    st.plotly_chart(fig)
+
+
 

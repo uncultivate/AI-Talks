@@ -4,6 +4,7 @@ import streamlit as st
 from src.styles.menu_styles import FOOTER_STYLES, HEADER_STYLES
 from src.utils.conversation import show_conversation, show_chat_buttons, show_conversation2, show_conversation3, clear_chat
 from src.utils.lang import en
+from src.utils.footer import plot_asx_200
 from streamlit_option_menu import option_menu
 import numpy as np
 import pandas as pd
@@ -487,90 +488,7 @@ def main() -> None:
         st.divider()
         st.write("Board meeting adjourned! Now the interest rates decision is in the Governor's hands alone.")
 
-def plot_asx_200(start_value, end_value, seed=None):
-    # Set the random seed for reproducibility
-    if seed is not None:
-        np.random.seed(seed)
-        
-    dates = pd.date_range(end=pd.Timestamp.today(), periods=30, freq='D')
-    
-    # Generate random noise
-    random_noise = np.random.normal(loc=0, scale=end_value/200, size=len(dates))
-    
-    # Create a series of changes that trend from the start_value to the end_value
-    linear_trend = np.linspace(start_value, end_value, len(dates))
-    
-    # Add a sinusoidal wave to the linear trend
-    wave_amplitude = end_value/100  # Amplitude of the wave
-    wave_frequency = 2 * np.pi / 15  # Frequency of the wave, 2*pi/period
-    sinusoidal_wave = wave_amplitude * np.sin(wave_frequency * np.arange(len(dates)))
 
-    # Combine the linear trend, sinusoidal wave, and random noise
-    asx_200_values = linear_trend + sinusoidal_wave + random_noise
-    
-    # Ensure the last value is exactly the end_value
-    asx_200_values[-1] = end_value
-    
-    # Ensure the first value is exactly the start_value
-    asx_200_values[0] = start_value
-    
-    df = pd.DataFrame({'Date': dates, 'ASX 200': asx_200_values})
-        
-    # Create Plotly Figure
-    fig = go.Figure()
-
-    # Add area plot
-    fig.add_trace(go.Scatter(
-        x=df['Date'],
-        y=df['ASX 200'],
-        mode='lines',
-        line=dict(width=0.5, color='Slateblue'),
-        stackgroup='one',
-        fill='tozeroy',
-        name='ASX 200 Area',
-        showlegend=False 
-    ))
-
-    # Add line plot
-    fig.add_trace(go.Scatter(
-        x=df['Date'],
-        y=df['ASX 200'],
-        mode='lines',
-        line=dict(color='Slateblue'),
-        showlegend=False 
-    ))
-
-
-
-    y_min = min(df['ASX 200']) - 100
-    y_max = max(df['ASX 200']) + 100
-    # Customize layout
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        
-        xaxis=dict(
-            tickformat='%d %b',
-            tickfont=dict(
-                color='white'
-            )
-        ),
-        margin=go.layout.Margin(
-            l=0, #left margin
-            r=0, #right margin
-            b=0, #bottom margin
-            t=0, #top margin
-        ),
-        yaxis=dict(
-        range=[y_min, y_max],
-        tickfont=dict(
-            color='white'
-        )
-        
-    )
-    )
-    # Display Plotly chart in Streamlit
-    st.plotly_chart(fig)
 
 def run_agi():
     st.session_state.locale = en
