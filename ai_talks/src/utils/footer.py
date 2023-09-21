@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import random
 import math
-import plotly.graph_objects as go
+#import plotly.graph_objects as go
 
 
 def show_info(icon: Path) -> None:
