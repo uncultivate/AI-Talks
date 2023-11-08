@@ -67,6 +67,8 @@ if 'news' not in st.session_state:
         "Corporate Blues: Businesses Grapple with Profit Downturn Amid Economic Uncertainty",
         "Job Market Volatility: Unemployment Spikes to 4% in a Month, Caution Sweeps the Workforce"
         ]
+if 'major_event' not in st.session_state:
+    st.session_state.major_event = []
 if 'model' not in st.session_state:
     st.session_state.model = "gpt-3.5-turbo"
 if'count' not in st.session_state:
@@ -80,45 +82,38 @@ if 'newsprint' not in st.session_state:
 if 'interest_rate' not in st.session_state:
     st.session_state['interest_rate'] = 3.0  # initial value
 
+# Indexes: 1 - Current, 2 - Previous, 3 - Change, 4 - Fract Change
 if 'gdp' not in st.session_state:
-    st.session_state['gdp'] = 2.0  # initial value
+    st.session_state['gdp'] = [2.0, 2.2, -0.2, -0.1]  # initial value
 
 if 'inflation' not in st.session_state:
-    st.session_state['inflation'] = 3.4  # initial value
+    st.session_state['inflation'] = [3.4, 3.4, 0.3, 0.3]  # initial value
 
 if 'govt_debt' not in st.session_state:
-    st.session_state['govt_debt'] = 897000000000  # initial value
+    st.session_state['govt_debt'] = [897000000000, 897000000000, 17000000000, 0.3]  # initial value
 
 if 'unemployment' not in st.session_state:
-    st.session_state['unemployment'] = 4.2  # initial value
+    st.session_state['unemployment'] = [4.2, 4.2, 0.3, 0.3]  # initial value
 
 if 'house_prices' not in st.session_state:
-    st.session_state['house_prices'] = 920000  # initial value
+    st.session_state['house_prices'] = [920000, 920000, 10000,0.3]  # initial value
 
 if 'consumer_sentiment' not in st.session_state:
-    st.session_state['consumer_sentiment'] = 50 # initial value
+    st.session_state['consumer_sentiment'] = [50, 50, 2, 0.2] # initial value
 
 if 'imports' not in st.session_state:
-    st.session_state['imports'] = 123000000000 # initial value
+    st.session_state['imports'] = [123000000000, 123000000000, 1000000, 0.2] # initial value
 
 if 'exports' not in st.session_state:
-    st.session_state['exports'] = 153000000000 # initial value
+    st.session_state['exports'] = [153000000000, 153000000000, 1000000000, 0.2] # initial value
 
 if 'asx_200' not in st.session_state:
-    st.session_state['asx_200'] = 7012.12 # initial value
+    st.session_state['asx_200'] = [7012.12, 7012.12, 1000, 0.2] # initial value
 
 
 if 'prev_interest_rate' not in st.session_state:
     st.session_state['prev_interest_rate'] = 3.0  # initial value for previous GDP growth
 
-if 'prev_gdp' not in st.session_state:
-    st.session_state['prev_gdp'] = 2.0  # initial value for previous GDP growth
-
-if 'prev_govt_debt' not in st.session_state:
-    st.session_state['prev_govt_debt'] = 897000000000  # initial value
-
-if 'prev_inflation' not in st.session_state:
-    st.session_state['prev_inflation'] = 3.4  # initial value for previous inflation rate
 
 if 'prev_unemployment' not in st.session_state:
     st.session_state['prev_unemployment'] = 4.2  # initial value for previous GDP growth
@@ -138,10 +133,6 @@ if 'prev_exports' not in st.session_state:
 if 'prev_asx_200' not in st.session_state:
     st.session_state['prev_asx_200'] = 6821 # initial value
 
-if 'gdp_change' not in st.session_state:
-    st.session_state['gdp_change'] =  -0.2
-if 'inflation_change' not in st.session_state:    
-    st.session_state['inflation_change'] =  0.3
 if 'f_govt_debt' not in st.session_state:
     st.session_state['f_govt_debt'] = '$897 bn'
 if 'f_govt_debt_change' not in st.session_state:
@@ -195,73 +186,73 @@ def raise_50():
     st.session_state.newsprint = False
     st.session_state.confirmed = True
     st.session_state['interest_rate'] += 0.50   
-    st.session_state['gdp'] -= 0.2 * raise_fifty_factor
-    st.session_state['inflation'] -= 0.1 * raise_fifty_factor
-    st.session_state['govt_debt'] = st.session_state['govt_debt'] * (1 + raise_fifty_factor/20)
-    st.session_state['unemployment'] += 0.2 * raise_fifty_factor
-    st.session_state['house_prices'] = st.session_state['house_prices'] * (1 + raise_fifty_factor/10)
-    st.session_state['consumer_sentiment'] += 2 * raise_fifty_factor
-    st.session_state['imports'] = st.session_state['imports'] * (1 + raise_fifty_factor/10)
-    st.session_state['exports'] = st.session_state['exports'] * (1 + lower_fifty_factor/10)
-    st.session_state['asx_200'] = st.session_state['asx_200'] * (1 + raise_fifty_factor/10)  
+    st.session_state['gdp'][0] -= 0.2 * raise_fifty_factor
+    st.session_state['inflation'][0] -= 0.1 * raise_fifty_factor
+    st.session_state['govt_debt'][0] = st.session_state['govt_debt'][0] * (1 + raise_fifty_factor/20)
+    st.session_state['unemployment'][0] += 0.2 * raise_fifty_factor
+    st.session_state['house_prices'][0] = st.session_state['house_prices'][0] * (1 + raise_fifty_factor/10)
+    st.session_state['consumer_sentiment'][0] += 2 * raise_fifty_factor
+    st.session_state['imports'][0] = st.session_state['imports'][0] * (1 + raise_fifty_factor/10)
+    st.session_state['exports'][0] = st.session_state['exports'][0] * (1 + lower_fifty_factor/10)
+    st.session_state['asx_200'][0] = st.session_state['asx_200'][0] * (1 + raise_fifty_factor/10)  
 
 def raise_25():  
     st.session_state['count'] = st.session_state['count'] + 1
     st.session_state.newsprint = False
     st.session_state.confirmed = True
     st.session_state['interest_rate'] += 0.25
-    st.session_state['gdp'] -= 0.2 * raise_twentyfive_factor
-    st.session_state['inflation'] -= 0.1 * raise_twentyfive_factor
-    st.session_state['unemployment'] += 0.2 * raise_twentyfive_factor
-    st.session_state['house_prices'] = st.session_state['house_prices'] * (1 + raise_twentyfive_factor/10)
-    st.session_state['consumer_sentiment'] += 1.5 * raise_twentyfive_factor
-    st.session_state['govt_debt'] = st.session_state['govt_debt'] * (1 + raise_twentyfive_factor/20)
-    st.session_state['imports'] = st.session_state['imports'] * (1 + raise_twentyfive_factor/10)
-    st.session_state['exports'] = st.session_state['exports'] * (1 + lower_twentyfive_factor/10)
-    st.session_state['asx_200'] = st.session_state['asx_200'] * (1 + raise_twentyfive_factor/10)
+    st.session_state['gdp'][0] -= 0.2 * raise_twentyfive_factor
+    st.session_state['inflation'][0] -= 0.1 * raise_twentyfive_factor
+    st.session_state['unemployment'][0] += 0.2 * raise_twentyfive_factor
+    st.session_state['house_prices'][0] = st.session_state['house_prices'][0] * (1 + raise_twentyfive_factor/10)
+    st.session_state['consumer_sentiment'][0] += 1.5 * raise_twentyfive_factor
+    st.session_state['govt_debt'][0] = st.session_state['govt_debt'][0] * (1 + raise_twentyfive_factor/20)
+    st.session_state['imports'][0] = st.session_state['imports'][0] * (1 + raise_twentyfive_factor/10)
+    st.session_state['exports'][0] = st.session_state['exports'][0] * (1 + lower_twentyfive_factor/10)
+    st.session_state['asx_200'][0] = st.session_state['asx_200'][0] * (1 + raise_twentyfive_factor/10)
 
 def koh():
     st.session_state['count'] = st.session_state['count'] + 1
     st.session_state.newsprint = False
     st.session_state.confirmed = True
-    st.session_state['gdp'] += keepsame_factor
-    st.session_state['inflation'] += keepsame_factor
-    st.session_state['unemployment'] += keepsame_factor
-    st.session_state['house_prices'] = st.session_state['house_prices'] * (1 + keepsame_factor/10)
-    st.session_state['consumer_sentiment'] += keepsame_factor*10
-    st.session_state['govt_debt'] = st.session_state['govt_debt'] * (1 + keepsame_factor/10)
-    st.session_state['imports'] = st.session_state['imports'] * (1 + keepsame_factor/10)
-    st.session_state['asx_200'] = st.session_state['asx_200'] * (1 + keepsame_factor/10)
+    st.session_state['gdp'][0] += keepsame_factor
+    st.session_state['inflation'][0] += keepsame_factor
+    st.session_state['unemployment'][0] += keepsame_factor
+    st.session_state['house_prices'][0] = st.session_state['house_prices'][0] * (1 + keepsame_factor/10)
+    st.session_state['consumer_sentiment'][0] += keepsame_factor*10
+    st.session_state['govt_debt'][0] = st.session_state['govt_debt'][0] * (1 + keepsame_factor/10)
+    st.session_state['imports'][0] = st.session_state['imports'][0] * (1 + keepsame_factor/10)
+    st.session_state['asx_200'][0] = st.session_state['asx_200'][0] * (1 + keepsame_factor/10)
 
 def lower_25():
     st.session_state['count'] = st.session_state['count'] + 1
     st.session_state.newsprint = False
     st.session_state.confirmed = True
     st.session_state['interest_rate'] -= 0.25
-    st.session_state['gdp'] += 0.2 * lower_twentyfive_factor
-    st.session_state['inflation'] += 0.1 * lower_twentyfive_factor
-    st.session_state['unemployment'] -= 0.2 * lower_twentyfive_factor
-    st.session_state['house_prices'] = st.session_state['house_prices'] * (1 + lower_twentyfive_factor/10)
-    st.session_state['consumer_sentiment'] += 1 * lower_twentyfive_factor
-    st.session_state['govt_debt'] = st.session_state['govt_debt'] * (1 + lower_twentyfive_factor/20)
-    st.session_state['imports'] = st.session_state['imports'] * (1 + lower_twentyfive_factor/10)
-    st.session_state['exports'] = st.session_state['exports'] * (1 + raise_twentyfive_factor/10)
-    st.session_state['asx_200'] = st.session_state['asx_200'] * (1 + lower_twentyfive_factor/10)   
+    st.session_state['gdp'][0] += 0.2 * lower_twentyfive_factor
+    st.session_state['inflation'][0] += 0.1 * lower_twentyfive_factor
+    st.session_state['unemployment'][0] -= 0.2 * lower_twentyfive_factor
+    st.session_state['house_prices'][0] = st.session_state['house_prices'][0] * (1 + lower_twentyfive_factor/10)
+    st.session_state['consumer_sentiment'][0] += 1 * lower_twentyfive_factor
+    st.session_state['govt_debt'][0] = st.session_state['govt_debt'][0] * (1 + lower_twentyfive_factor/20)
+    st.session_state['imports'][0] = st.session_state['imports'][0] * (1 + lower_twentyfive_factor/10)
+    st.session_state['exports'][0] = st.session_state['exports'][0] * (1 + raise_twentyfive_factor/10)
+    st.session_state['asx_200'][0] = st.session_state['asx_200'][0] * (1 + lower_twentyfive_factor/10)   
 
 def lower_50():
     st.session_state['count'] = st.session_state['count'] + 1
     st.session_state.newsprint = False
     st.session_state.confirmed = True
     st.session_state['interest_rate'] -= 0.50
-    st.session_state['gdp'] += 0.2 * lower_fifty_factor
-    st.session_state['inflation'] += 0.1 * lower_fifty_factor
-    st.session_state['govt_debt'] = st.session_state['govt_debt'] * (1 + lower_fifty_factor/20)
-    st.session_state['unemployment'] -= 0.2 * lower_fifty_factor
-    st.session_state['house_prices'] = st.session_state['house_prices'] * (1 + lower_fifty_factor/10)
-    st.session_state['consumer_sentiment'] += 2 * lower_fifty_factor
-    st.session_state['imports'] = st.session_state['imports'] * (1 + lower_fifty_factor/10)
-    st.session_state['exports'] = st.session_state['exports'] * (1 + raise_fifty_factor/10)
-    st.session_state['asx_200'] = st.session_state['asx_200'] * (1 + lower_fifty_factor/10)
+    st.session_state['gdp'][0] += 0.2 * lower_fifty_factor
+    st.session_state['inflation'][0] += 0.1 * lower_fifty_factor
+    st.session_state['govt_debt'][0] = st.session_state['govt_debt'][0] * (1 + lower_fifty_factor/20)
+    st.session_state['unemployment'][0] -= 0.2 * lower_fifty_factor
+    st.session_state['house_prices'][0] = st.session_state['house_prices'][0] * (1 + lower_fifty_factor/10)
+    st.session_state['consumer_sentiment'][0] += 2 * lower_fifty_factor
+    st.session_state['imports'][0] = st.session_state['imports'][0] * (1 + lower_fifty_factor/10)
+    st.session_state['exports'][0] = st.session_state['exports'][0] * (1 + raise_fifty_factor/10)
+    st.session_state['asx_200'][0] = st.session_state['asx_200'][0] * (1 + lower_fifty_factor/10)
 
 st.sidebar.button("Raise 50 points", on_click=raise_50, type="primary")
 st.sidebar.button("Raise 25 points", on_click=raise_25, type="primary")
@@ -330,84 +321,14 @@ st.sidebar.divider()
 st.sidebar.header('Quantitative Easing')
 st.sidebar.write('Increase the money supply by purchasing longer-term securities from the open market to encourage borrowing, investment, and spending')
 qe_action = st.sidebar.slider("Asset Purchases Amount ($Bn)", 0, 1000, 0)
-st.image('ai_talks/assets/img/boardroom.jpg')
+#st.image('ai_talks/assets/img/boardroom.jpg')
 st.title("The Chair")
 st.subheader(f'Month {st.session_state.count}')
 
 
 
 
-if st.session_state.confirmed == True:
-    # Initiate session state values for metric changes
-    st.session_state['gdp_change'] =  f"{round(st.session_state['gdp'] - st.session_state['prev_gdp'],2)}%"
-    st.session_state['inflation_change'] =  f"{round(st.session_state['inflation'] - st.session_state['prev_inflation'],2)}%"
-    st.session_state['govt_debt_change'] = st.session_state['govt_debt'] - st.session_state['prev_govt_debt']
-    st.session_state['unemployment_change'] =  f"{round(st.session_state['unemployment'] - st.session_state['prev_unemployment'],2)}%"
-    st.session_state['house_prices_change'] = st.session_state['house_prices'] - st.session_state['prev_house_prices']
-    st.session_state['consumer_sentiment_change'] =  f"{round(st.session_state['consumer_sentiment'] - st.session_state['prev_consumer_sentiment'],2)}%"
-    st.session_state['imports_change'] = st.session_state['imports'] - st.session_state['prev_imports']
-    st.session_state['exports_change'] = st.session_state['exports'] - st.session_state['prev_exports']
-    st.session_state['asx_200_change'] =  st.session_state['asx_200'] - st.session_state['prev_asx_200']
 
-
-    # Format monetary values prices
-    st.session_state['f_house_prices'] = math.ceil(st.session_state['house_prices'] / 100) * 100
-    st.session_state['f_house_prices_change'] = math.ceil(st.session_state['house_prices_change'] / 100) * 100
-
-    st.session_state['f_house_prices'] = f"${st.session_state['f_house_prices']:,.0f}"
-    st.session_state['f_house_prices_change'] = f"{st.session_state['f_house_prices_change']:,.0f}"
-
-    st.session_state['f_govt_debt'] = round(st.session_state['govt_debt'] / 1e9)
-    st.session_state['f_govt_debt_change'] = f"{round(st.session_state['govt_debt_change'] / 1e9)} bn"
-    st.session_state['f_govt_debt'] = f"${int(st.session_state['f_govt_debt'])} bn" 
-
-    st.session_state['f_imports'] = round(st.session_state['imports'] / 1e9)
-    st.session_state['f_imports_change'] = f"{round(st.session_state['imports_change'] / 1e9)} bn"
-    st.session_state['f_imports'] = f"${int(st.session_state['f_imports'])} bn" 
-
-    st.session_state['f_exports'] = round(st.session_state['exports'] / 1e9)
-    st.session_state['f_exports_change'] = f"{round(st.session_state['exports_change'] / 1e9)} bn"
-    st.session_state['f_exports'] = f"${int(st.session_state['f_exports'])} bn" 
-
-# Economic performance list for feeding into GPT
-performance = [
-    ["Economic Indicator: ASX 200",
-    f"Current Value: {st.session_state['asx_200']}",
-    f"Change in value from previous month: {st.session_state['asx_200_change']}"
-    ],
-    ["Economic Indicator: GDP",
-    f"Current Value: {st.session_state['gdp']}",
-    f"Change in value from previous month: {st.session_state['gdp_change']}"
-    ],
-    ["Economic Indicator: Inflation",
-    f"Current Value: {st.session_state['inflation']}",
-    f"Change in value from previous month: {st.session_state['inflation_change']}"
-    ],
-        ["Economic Indicator: Government Debt",
-    f"Current Value: {st.session_state['govt_debt']}",
-    f"Change in value from previous month: {st.session_state['govt_debt_change']}"
-    ],
-        ["Economic Indicator: Unemployment",
-    f"Current Value: {st.session_state['unemployment']}",
-    f"Change in value from previous month: {st.session_state['unemployment_change']}"
-    ],
-        ["Economic Indicator: House Prices",
-    f"Current Value: {st.session_state['house_prices']}",
-    f"Change in value from previous month: {st.session_state['house_prices_change']}"
-    ],
-        ["Economic Indicator: Imports",
-    f"Current Value: {st.session_state['imports']}",
-    f"Change in value from previous month: {st.session_state['imports_change']}"
-    ],
-        ["Economic Indicator: Exports",
-    f"Current Value: {st.session_state['exports']}",
-    f"Change in value from previous month: {st.session_state['exports_change']}"
-    ],
-        ["Economic Indicator: Consumer Sentiment",
-    f"Current Value: {st.session_state['consumer_sentiment']}",
-    f"Change in value from previous month: {st.session_state['consumer_sentiment_change']}"
-    ]
-]
 
 if st.session_state['prev_interest_rate'] == st.session_state['interest_rate']:
     decision = 'hold'
@@ -426,13 +347,27 @@ angle2 = f"Criticism of the Reserve Bank Governor by a senior government ministe
 
 if st.session_state.newsprint == False and st.session_state.confirmed == True and st.session_state.count > 1:
     st.session_state.news = []
-    show_conversation3(np1, performance)
-    show_conversation3(np2, performance)
-    show_conversation3(np3, performance, angle2)
-    show_conversation3(np4, performance, angle1)
+    st.write("Here are the news headlines")
+    st.session_state.news = ['a','b','c','d']
+    #show_conversation3(np1, performance)
+    #show_conversation3(np2, performance)
+    #show_conversation3(np3, performance, angle2)
+    #show_conversation3(np4, performance, angle1)
+    # Generate some major random event
+    rand_event = random.randint(0,9)
+    
+    st.session_state.major_event = major_events[rand_event][0]
+    print(st.session_state[major_events[rand_event][1]][0])
+    #st.session_state[major_events[rand_event][1]][1] = st.session_state[major_events[rand_event][1]]
+    st.session_state[major_events[rand_event][1]][0] = st.session_state[major_events[rand_event][1]][0] * major_events[rand_event][2]
+    print(st.session_state[major_events[rand_event][1]][0])
     st.session_state.newsprint = True
 
 if st.session_state.count > 1: 
+
+    st.warning(st.session_state.major_event, icon="🌏")
+
+    # Other news
     st.info(st.session_state.news[0], icon="📰")
     time.sleep(0.3)
     st.info(st.session_state.news[1], icon="📰")
@@ -449,12 +384,80 @@ if st.session_state.count == 1:
     st.info(st.session_state.news[2], icon="📰")
     time.sleep(0.3)
 
-if st.session_state.count == random.randint(2,12):
-    rand_event = random.randint(0,9)
-    st.warning(major_events[rand_event][0], icon="🌏")
-    st.session_state[major_events[rand_event][1]] = st.session_state[major_events[rand_event][1]] * major_events[rand_event][2]
+
+if st.session_state.confirmed == True:
+    # Initiate session state values for metric changes
+    st.session_state['gdp'][2] =  f"{round(st.session_state['gdp'][0] - st.session_state['gdp'][1],2)}%"
+    st.session_state['inflation'][2] =  f"{round(st.session_state['inflation'][0] - st.session_state['inflation'][1],2)}%"
+    st.session_state['govt_debt'][2] = st.session_state['govt_debt'][0] - st.session_state['govt_debt'][1]
+    st.session_state['unemployment'][2] =  f"{round(st.session_state['unemployment'][0] - st.session_state['unemployment'][1],2)}%"
+    st.session_state['house_prices'][2] = st.session_state['house_prices'][0] - st.session_state['house_prices'][1]
+    st.session_state['consumer_sentiment'][2] =  f"{round(st.session_state['consumer_sentiment'][0] - st.session_state['consumer_sentiment'][1],2)}%"
+    st.session_state['imports'][2] = st.session_state['imports'][0] - st.session_state['imports'][1]
+    st.session_state['exports'][2] = st.session_state['exports'][0] - st.session_state['exports'][1]
+    st.session_state['asx_200'][2] =  st.session_state['asx_200'][0] - st.session_state['asx_200'][1]
+
+    
 
 
+    # Format monetary values prices
+    st.session_state['f_house_prices'] = math.ceil(st.session_state['house_prices'][0] / 100) * 100
+    st.session_state['f_house_prices_change'] = math.ceil(st.session_state['house_prices'][2] / 100) * 100
+
+    st.session_state['f_house_prices'] = f"${st.session_state['f_house_prices']:,.0f}"
+    st.session_state['f_house_prices_change'] = f"{st.session_state['f_house_prices_change']:,.0f}"
+
+    st.session_state['f_govt_debt'] = round(st.session_state['govt_debt'][0] / 1e9)
+    st.session_state['f_govt_debt_change'] = f"{round(st.session_state['govt_debt'][2] / 1e9)} bn"
+    st.session_state['f_govt_debt'] = f"${int(st.session_state['f_govt_debt'])} bn" 
+
+    st.session_state['f_imports'] = round(st.session_state['imports'][0] / 1e9)
+    st.session_state['f_imports_change'] = f"{round(st.session_state['imports'][2] / 1e9)} bn"
+    st.session_state['f_imports'] = f"${int(st.session_state['f_imports'])} bn" 
+
+    st.session_state['f_exports'] = round(st.session_state['exports'][0] / 1e9)
+    st.session_state['f_exports_change'] = f"{round(st.session_state['exports'][2] / 1e9)} bn"
+    st.session_state['f_exports'] = f"${int(st.session_state['f_exports'])} bn" 
+
+# Economic performance list for feeding into GPT
+performance = [
+    ["Economic Indicator: ASX 200",
+    f"Current Value: {st.session_state['asx_200']}",
+    f"Change in value from previous month: {st.session_state['asx_200'][2]}"
+    ],
+    ["Economic Indicator: GDP",
+    f"Current Value: {st.session_state['gdp']}",
+    f"Change in value from previous month: {st.session_state['gdp'][2]}"
+    ],
+    ["Economic Indicator: Inflation",
+    f"Current Value: {st.session_state['inflation']}",
+    f"Change in value from previous month: {st.session_state['inflation'][2]}"
+    ],
+        ["Economic Indicator: Government Debt",
+    f"Current Value: {st.session_state['govt_debt']}",
+    f"Change in value from previous month: {st.session_state['govt_debt'][2]}"
+    ],
+        ["Economic Indicator: Unemployment",
+    f"Current Value: {st.session_state['unemployment']}",
+    f"Change in value from previous month: {st.session_state['unemployment'][2]}"
+    ],
+        ["Economic Indicator: House Prices",
+    f"Current Value: {st.session_state['house_prices']}",
+    f"Change in value from previous month: {st.session_state['house_prices'][2]}"
+    ],
+        ["Economic Indicator: Imports",
+    f"Current Value: {st.session_state['imports']}",
+    f"Change in value from previous month: {st.session_state['imports'][2]}"
+    ],
+        ["Economic Indicator: Exports",
+    f"Current Value: {st.session_state['exports']}",
+    f"Change in value from previous month: {st.session_state['exports'][2]}"
+    ],
+        ["Economic Indicator: Consumer Sentiment",
+    f"Current Value: {st.session_state['consumer_sentiment']}",
+    f"Change in value from previous month: {st.session_state['consumer_sentiment'][2]}"
+    ]
+]
 
 
 def main() -> None:
@@ -511,25 +514,25 @@ def run_agi():
             main()
         case st.session_state.locale.footer_option1:
             m1, m2, m3 = st.columns((1,1,1))
-            m1.metric("GDP Growth", value=f"{round(st.session_state['gdp'],2)}%", delta=st.session_state['gdp_change'])
-            m2.metric("Inflation Rate", value=f"{round(st.session_state['inflation'],2)}%", delta=st.session_state['inflation_change'], delta_color="inverse")
+            m1.metric("GDP Growth", value=f"{round(st.session_state['gdp'][0],2)}%", delta=st.session_state['gdp'][2])
+            m2.metric("Inflation Rate", value=f"{round(st.session_state['inflation'][0],2)}%", delta=st.session_state['inflation'][2], delta_color="inverse")
             m3.metric("Government Debt", value=f"{st.session_state['f_govt_debt']}", delta=st.session_state['f_govt_debt_change'], delta_color="inverse")
 
             m4, m5, m6 = st.columns((1,1,1))
             m4.metric("National Mean House Price", value=f"{st.session_state['f_house_prices']}", delta=st.session_state['f_house_prices_change'])
-            m5.metric("Unemployment Rate", value=f"{round(st.session_state['unemployment'],2)}%", delta=st.session_state['unemployment_change'], delta_color="inverse")
-            m6.metric("Consumer Sentiment", value=f"{round(st.session_state['consumer_sentiment'],2)}%", delta=st.session_state['consumer_sentiment_change'])
+            m5.metric("Unemployment Rate", value=f"{round(st.session_state['unemployment'][0],2)}%", delta=st.session_state['unemployment'][2], delta_color="inverse")
+            m6.metric("Consumer Sentiment", value=f"{round(st.session_state['consumer_sentiment'][0],2)}%", delta=st.session_state['consumer_sentiment'][2])
 
             m7, m8, m9 = st.columns((1,1,1))
             m7.metric("Imports", value=f"{st.session_state['f_imports']}", delta=st.session_state['f_imports_change'])
             m8.metric("Exports", value=f"{st.session_state['f_exports']}", delta=st.session_state['f_exports_change'])
-            m9.metric("Stock Market Index", value=round(st.session_state['asx_200'],2), delta=round(st.session_state['asx_200_change'],2))
+            m9.metric("Stock Market Index", value=round(st.session_state['asx_200'][0],2), delta=round(st.session_state['asx_200'][2],2))
 
         case st.session_state.locale.footer_option2:
             st.header('S&P / ASX 200')
-            stock_dir = "Down" if st.session_state['asx_200_change'] < 0 else "Up"
-            st.write(f"{stock_dir} {round(st.session_state['asx_200_change'],2)} points ({round(100*(1 - st.session_state['prev_asx_200']/st.session_state['asx_200']),2)}%) in the past month")
-            plot_asx_200(st.session_state['asx_200'] - st.session_state['asx_200_change'], st.session_state['asx_200'], 1)
+            stock_dir = "Down" if st.session_state['asx_200'][0] < 0 else "Up"
+            st.write(f"{stock_dir} {round(st.session_state['asx_200'][2],2)} points ({round(100*(1 - st.session_state['asx_200'][1]/st.session_state['asx_200'][0]),2)}%) in the past month")
+            plot_asx_200(st.session_state['asx_200'][0] - st.session_state['asx_200'][1], st.session_state['asx_200'][0], 1)
 
 
 
@@ -541,15 +544,15 @@ if __name__ == "__main__":
 # Update previous metrics for the next round
 if st.session_state.confirmed:  
     st.session_state['prev_interest_rate'] = st.session_state['interest_rate']
-    st.session_state['prev_gdp'] = st.session_state['gdp']
-    st.session_state['prev_inflation'] = st.session_state['inflation']
-    st.session_state['prev_govt_debt'] = st.session_state['govt_debt']
-    st.session_state['prev_unemployment'] = st.session_state['unemployment']
-    st.session_state['prev_house_prices'] = st.session_state['house_prices']
-    st.session_state['prev_consumer_sentiment'] = st.session_state['consumer_sentiment']
-    st.session_state['prev_imports'] = st.session_state['imports']
-    st.session_state['prev_exports'] = st.session_state['exports']
-    st.session_state['prev_asx_200'] = st.session_state['asx_200']
+    st.session_state['gdp'][1] = st.session_state['gdp'][0]
+    st.session_state['inflation'][1] = st.session_state['inflation'][0]
+    st.session_state['govt_debt'][1] = st.session_state['govt_debt'][0]
+    st.session_state['unemployment'][1] = st.session_state['unemployment'][0]
+    st.session_state['house_prices'][1] = st.session_state['house_prices'][0]
+    st.session_state['consumer_sentiment'][1] = st.session_state['consumer_sentiment'][0]
+    st.session_state['imports'][1] = st.session_state['imports'][0]
+    st.session_state['exports'][1] = st.session_state['exports'][0]
+    st.session_state['asx_200'][1] = st.session_state['asx_200'][0]
     st.session_state.meeting = False
     st.session_state.confirmed = False 
     clear_chat()  
