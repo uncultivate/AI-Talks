@@ -21,17 +21,6 @@ def clear_chat() -> None:
     st.session_state.total_tokens = []
 
 
-# def show_text_input() -> None:
-#     st.text_area(label=st.session_state.locale.chat_placeholder, value=st.session_state.user_text, key="user_text")
-
-
-# def get_user_input():
-#     match st.session_state.input_kind:
-#         case st.session_state.locale.input_kind_1:
-#             show_text_input()
-
-
-
 def show_chat_buttons() -> None:
     b0, b1, b2 = st.columns(3)
     with b0, b1, b2:
