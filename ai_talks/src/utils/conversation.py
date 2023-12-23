@@ -1,7 +1,7 @@
 from random import randrange
 
 import streamlit as st
-from openai import InvalidRequestError, OpenAIError
+from openai.error import InvalidRequestError, OpenAIError
 from streamlit_chat import message
 
 from .agi.chat_gpt import loading_data
