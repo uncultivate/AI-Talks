@@ -45,35 +45,35 @@ def show_chat2(ai_content: str) -> None:
 
 
 def show_gpt_conversation(bm) -> None:
-    try:
-        completion = loading_data(st.session_state.model, st.session_state[bm])
-        ai_content = completion.get("choices")[0].get("message").get("content")
-        #calc_cost(completion.get("usage"))
-        st.session_state[bm].append({"role": "assistant", "content": ai_content})
-        if ai_content:
-            show_chat(ai_content)
+
+    completion = loading_data(st.session_state.model, st.session_state[bm])
+    ai_content = completion.get("choices")[0].get("message").get("content")
+    #calc_cost(completion.get("usage"))
+    st.session_state[bm].append({"role": "assistant", "content": ai_content})
+    if ai_content:
+        show_chat(ai_content)
     
     
 
 def show_gpt_conversation2() -> None:
-    try:
-        completion = loading_data(st.session_state.model, st.session_state.messages)
-        ai_content = completion.get("choices")[0].get("message").get("content")
-        #calc_cost(completion.get("usage"))
-        st.session_state.messages.append({"role": "assistant", "content": ai_content})
-        if ai_content:
-            show_chat(ai_content)
+
+    completion = loading_data(st.session_state.model, st.session_state.messages)
+    ai_content = completion.get("choices")[0].get("message").get("content")
+    #calc_cost(completion.get("usage"))
+    st.session_state.messages.append({"role": "assistant", "content": ai_content})
+    if ai_content:
+        show_chat(ai_content)
    
 
 
 def show_gpt_conversation3() -> None:
-    try:
-        completion = loading_data(st.session_state.model, st.session_state.messages)
-        ai_content = completion.get("choices")[0].get("message").get("content")
-        #calc_cost(completion.get("usage"))
-        st.session_state.messages.append({"role": "assistant", "content": ai_content})
-        if ai_content:
-            show_chat2(ai_content)
+
+    completion = loading_data(st.session_state.model, st.session_state.messages)
+    ai_content = completion.get("choices")[0].get("message").get("content")
+    #calc_cost(completion.get("usage"))
+    st.session_state.messages.append({"role": "assistant", "content": ai_content})
+    if ai_content:
+        show_chat2(ai_content)
    
 
 
