@@ -34,6 +34,9 @@ class Locale:
     footer_option0: str
     footer_option1: str
     footer_option2: str
+    footer_option3: str
+    footer_option4: str
+    footer_option5: str
     footer_chat: str
     footer_channel: str
     responsibility_denial: str
@@ -74,6 +77,9 @@ en = Locale(
     footer_option0="Meeting Minutes",
     footer_option1="Key Metrics",
     footer_option2="Markets",
+    footer_option3="Letter",
+    footer_option4="Charts",
+    footer_option5="About The Chair",
     footer_chat="AI Talks Chat",
     footer_channel="AI Talks Channel",
     responsibility_denial="""
