@@ -1,7 +1,7 @@
 from random import randrange
 
 import streamlit as st
-from openai.error import OpenAIError
+#from openai.error import OpenAIError
 from streamlit_chat import message
 
 from .agi.chat_gpt import loading_data
@@ -53,8 +53,7 @@ def show_gpt_conversation(bm) -> None:
         if ai_content:
             show_chat(ai_content)
     
-    except (OpenAIError, UnboundLocalError) as err:
-        st.error(err)
+    
 
 def show_gpt_conversation2() -> None:
     try:
@@ -65,8 +64,7 @@ def show_gpt_conversation2() -> None:
         if ai_content:
             show_chat(ai_content)
    
-    except (OpenAIError, UnboundLocalError) as err:
-        st.error(err)    
+
 
 def show_gpt_conversation3() -> None:
     try:
@@ -77,8 +75,7 @@ def show_gpt_conversation3() -> None:
         if ai_content:
             show_chat2(ai_content)
    
-    except (OpenAIError, UnboundLocalError) as err:
-        st.error(err)
+
 
 
 
