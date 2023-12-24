@@ -1,7 +1,7 @@
 from random import randrange
 
 import streamlit as st
-#from openai.error import OpenAIError
+from openai.error import InvalidRequestError, OpenAIError
 from streamlit_chat import message
 
 from .agi.chat_gpt import loading_data
@@ -45,37 +45,61 @@ def show_chat2(ai_content: str) -> None:
 
 
 def show_gpt_conversation(bm) -> None:
-
-    completion = loading_data(st.session_state.model, st.session_state[bm])
-    ai_content = completion.get("choices")[0].get("message").get("content")
-    #calc_cost(completion.get("usage"))
-    st.session_state[bm].append({"role": "assistant", "content": ai_content})
-    if ai_content:
-        show_chat(ai_content)
-    
-    
+    try:
+        completion = loading_data(st.session_state.model, st.session_state[bm])
+        ai_content = completion.get("choices")[0].get("message").get("content")
+        #calc_cost(completion.get("usage"))
+        st.session_state[bm].append({"role": "assistant", "content": ai_content})
+        if ai_content:
+            show_chat(ai_content)
+    except InvalidRequestError as err:
+        if err.code == "context_length_exceeded":
+            st.session_state[bm].pop(1)
+            if len(st.session_state[bm]) == 1:
+                st.session_state.user_text = ""
+            show_conversation()
+        else:
+            st.error(err)
+    except (OpenAIError, UnboundLocalError) as err:
+        st.error(err)
 
 def show_gpt_conversation2() -> None:
-
-    completion = loading_data(st.session_state.model, st.session_state.messages)
-    ai_content = completion.get("choices")[0].get("message").get("content")
-    #calc_cost(completion.get("usage"))
-    st.session_state.messages.append({"role": "assistant", "content": ai_content})
-    if ai_content:
-        show_chat(ai_content)
-   
-
+    try:
+        completion = loading_data(st.session_state.model, st.session_state.messages)
+        ai_content = completion.get("choices")[0].get("message").get("content")
+        #calc_cost(completion.get("usage"))
+        st.session_state.messages.append({"role": "assistant", "content": ai_content})
+        if ai_content:
+            show_chat(ai_content)
+    except InvalidRequestError as err:
+        if err.code == "context_length_exceeded":
+            st.session_state.messages.pop(1)
+            if len(st.session_state.messages) == 1:
+                st.session_state.user_text = ""
+            show_conversation2()
+        else:
+            st.error(err)
+    except (OpenAIError, UnboundLocalError) as err:
+        st.error(err)    
 
 def show_gpt_conversation3() -> None:
-
-    completion = loading_data(st.session_state.model, st.session_state.messages)
-    ai_content = completion.get("choices")[0].get("message").get("content")
-    #calc_cost(completion.get("usage"))
-    st.session_state.messages.append({"role": "assistant", "content": ai_content})
-    if ai_content:
-        show_chat2(ai_content)
-   
-
+    try:
+        completion = loading_data(st.session_state.model, st.session_state.messages)
+        ai_content = completion.get("choices")[0].get("message").get("content")
+        #calc_cost(completion.get("usage"))
+        st.session_state.messages.append({"role": "assistant", "content": ai_content})
+        if ai_content:
+            show_chat2(ai_content)
+    except InvalidRequestError as err:
+        if err.code == "context_length_exceeded":
+            st.session_state.messages.pop(1)
+            if len(st.session_state.messages) == 1:
+                st.session_state.user_text = ""
+            show_conversation()
+        else:
+            st.error(err)
+    except (OpenAIError, UnboundLocalError) as err:
+        st.error(err)
 
 
 
