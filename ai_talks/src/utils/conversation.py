@@ -66,6 +66,7 @@ def show_gpt_conversation2() -> None:
 def show_gpt_conversation3() -> None:
 
     completion = loading_data(st.session_state.model, st.session_state.messages)
+    st.write(completion)
     ai_content = completion.get("choices")[0].get("message").get("content")
     #calc_cost(completion.get("usage"))
     st.session_state.messages.append({"role": "assistant", "content": ai_content})
