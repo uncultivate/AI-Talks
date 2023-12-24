@@ -17,7 +17,7 @@ def loading_data(ai_model: str, messages: List[dict]) -> dict:
     logging.info(f"{messages=}")
     chat_completion = client.chat.completions.create(
         messages=messages,
-        model="gpt-3.5-turbo",
+        model=ai_model,
     )
     logging.info(f"{chat_completion=}")
     return chat_completion
