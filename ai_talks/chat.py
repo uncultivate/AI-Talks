@@ -453,9 +453,9 @@ if st.session_state.inplay:
     st.sidebar.button("Lower 25 points", on_click=lower_25, type="primary")
     st.sidebar.button("Lower 50 points", on_click=lower_50, type="primary")
     st.sidebar.divider()
-    st.sidebar.header('Quantitative Easing')
-    st.sidebar.write('Increase the money supply by purchasing longer-term securities from the open market to encourage borrowing, investment, and spending')
-    qe_action = st.sidebar.slider("Asset Purchases Amount ($Bn)", 0, 1000, 0)
+    # st.sidebar.header('Quantitative Easing')
+    # st.sidebar.write('Increase the money supply by purchasing longer-term securities from the open market to encourage borrowing, investment, and spending')
+    # qe_action = st.sidebar.slider("Asset Purchases Amount ($Bn)", 0, 1000, 0)
 
 # Initiate session state values for metric changes
  
