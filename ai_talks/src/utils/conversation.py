@@ -46,7 +46,7 @@ def extract_message_content(chat_completion):
     messages = []
     for choice in chat_completion.choices:
         messages.append(choice.message.content)
-    return messages
+    return messages[0]
 
 
 def show_gpt_conversation(bm) -> None:
