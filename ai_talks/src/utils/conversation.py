@@ -61,7 +61,7 @@ def show_gpt_conversation(bm) -> None:
    
 
 def show_gpt_conversation2() -> None:
-
+    st.write(st.session_state.messages)
     completion = loading_data(st.session_state.model, st.session_state.messages)
     extracted_messages = extract_message_content(completion)
     #calc_cost(completion.get("usage"))
@@ -71,7 +71,7 @@ def show_gpt_conversation2() -> None:
    
 
 def show_gpt_conversation3() -> None:
-
+    st.write(st.session_state.messages)
     completion = loading_data(st.session_state.model, st.session_state.messages)
     st.write(completion)
     extracted_messages = extract_message_content(completion)
