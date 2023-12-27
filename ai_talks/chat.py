@@ -2,7 +2,7 @@ from pathlib import Path
 from random import randrange, uniform
 import streamlit as st
 from src.styles.menu_styles import FOOTER_STYLES, HEADER_STYLES
-from src.utils.conversation import show_conversation, show_chat_buttons, show_conversation2, write_news, clear_chat
+from src.utils.conversation import show_conversation, write_news, clear_chat
 from src.utils.lang import en
 from src.utils.footer import plot_asx_200, plot_final
 from streamlit_option_menu import option_menu
