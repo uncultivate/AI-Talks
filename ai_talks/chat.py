@@ -743,8 +743,9 @@ if st.session_state.inplay:
             st.session_state.news = []
             st.write("Here are the news headlines")
             write_news(np1, performance_df)
-            #write_news(np2, performance_df, angle2)
-            #write_news(np3, performance_df, angle1)
+            write_news(np2, performance_df, angle2)
+            write_news(np3, performance_df, angle1)
+            
             # Generate some major random event
         
         if len(st.session_state['minor_events_list']) > 0 and st.session_state.count <= 6:
@@ -770,10 +771,10 @@ if st.session_state.inplay:
             # Other news
             st.info(st.session_state.messages[0]["content"][0].strip('\"'), icon="📰")
             time.sleep(0.3)
-            # st.info(st.session_state.news[1], icon="📰")
-            # time.sleep(0.3)
-            # st.info(st.session_state.news[2], icon="📰")
-            # time.sleep(0.3)
+            st.info(st.session_state.messages[1]["content"][0].strip('\"'), icon="📰")
+            time.sleep(0.3)
+            st.info(st.session_state.messages[2]["content"][0].strip('\"'), icon="📰")
+            time.sleep(0.3)
 
 
 
