@@ -57,7 +57,7 @@ def show_gpt_conversation(bm) -> None:
     st.session_state[bm].append({"role": "assistant", "content": extracted_messages})
     if extracted_messages:
         show_chat(extracted_messages)
-    #st.session_state.prompt = []
+    st.session_state.prompt = []
    
    
 
@@ -68,17 +68,16 @@ def show_gpt_conversation2() -> None:
     #st.session_state.messages.append({"role": "assistant", "content": ai_content})
     if extracted_messages:
         show_chat(extracted_messages)
-    #st.session_state.prompt = []
+    st.session_state.prompt = []
    
 
 def show_gpt_conversation3() -> None:
-    st.write(st.session_state.prompt)
     completion = loading_data(st.session_state.model, st.session_state.prompt)
     extracted_messages = extract_message_content(completion)
     st.session_state.messages.append({"role": "assistant", "content": extracted_messages})
     if extracted_messages:
         show_chat2(extracted_messages)
-    #st.session_state.prompt = []
+    st.session_state.prompt = []
 
 
 def show_conversation(ai_role, economic_data, bm) -> None:
