@@ -46,7 +46,7 @@ def extract_message_content(chat_completion):
     messages = []
     for choice in chat_completion.choices:
         messages.append(choice.message.content)
-    return messages[0]
+    return messages
 
 
 def show_gpt_conversation(bm) -> None:
@@ -80,7 +80,7 @@ def show_gpt_conversation3() -> None:
     st.session_state.messages.append({"role": "assistant", "content": extracted_messages})
     st.write(st.session_state.messages)
     if extracted_messages:
-        show_chat(extracted_messages)
+        show_chat2(extracted_messages)
 
 
 def show_conversation(ai_role, economic_data, bm) -> None:
