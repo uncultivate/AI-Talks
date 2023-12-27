@@ -75,8 +75,10 @@ def show_gpt_conversation3() -> None:
     completion = loading_data(st.session_state.model, st.session_state.prompt)
     st.write(completion)
     extracted_messages = extract_message_content(completion)
+    st.write(extracted_messages)
     #calc_cost(completion.get("usage"))
     st.session_state.messages.append({"role": "assistant", "content": extracted_messages})
+    st.write(st.session_state.messages)
     if extracted_messages:
         show_chat(extracted_messages)
 
