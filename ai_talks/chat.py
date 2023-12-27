@@ -787,6 +787,7 @@ if st.session_state.inplay:
 def run_agi():
     st.session_state.locale = en
     if st.session_state.inplay:
+        st.write(st.session_state.messages)
         
 
         selected_footer = option_menu(
