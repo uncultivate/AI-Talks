@@ -62,7 +62,7 @@ def show_gpt_conversation(bm) -> None:
 
 def show_gpt_conversation2() -> None:
     st.write(st.session_state.messages)
-    completion = loading_data(st.session_state.model, st.session_state.messages)
+    completion = loading_data(st.session_state.model, st.session_state.prompt)
     extracted_messages = extract_message_content(completion)
     #calc_cost(completion.get("usage"))
     #st.session_state.messages.append({"role": "assistant", "content": ai_content})
@@ -72,7 +72,7 @@ def show_gpt_conversation2() -> None:
 
 def show_gpt_conversation3() -> None:
     st.write(st.session_state.messages)
-    completion = loading_data(st.session_state.model, st.session_state.messages)
+    completion = loading_data(st.session_state.model, st.session_state.prompt)
     st.write(completion)
     extracted_messages = extract_message_content(completion)
     #calc_cost(completion.get("usage"))
@@ -93,10 +93,10 @@ def show_conversation(ai_role, economic_data, bm) -> None:
 
 
 def write_news(ai_role, economic_data, decision=None) -> None:
-    if st.session_state.messages:
-        st.session_state.messages.append({"role": "user", "content": f'Write a single headline for your publication: {ai_role} using the one of the following metrics: {economic_data}. Also consider {decision}' })
+    if st.session_state.prompt:
+        st.session_state.prompt.append({"role": "user", "content": f'Write a single headline for your publication: {ai_role} using the one of the following metrics: {economic_data}. Also consider {decision}' })
     else:        
-        st.session_state.messages = [
+        st.session_state.prompt = [
             {"role": "system", "content": ai_role},
             {"role": "user", "content": f'Write a single headline for your publication: {ai_role}, using one of the following metrics: {economic_data}. Also consider {decision}' },
         ]
