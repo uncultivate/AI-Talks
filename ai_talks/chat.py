@@ -717,9 +717,11 @@ if st.session_state.inplay:
                 bm1 = "You are an eminent economist on the Reserve Bank Board. Make a recommendation to the governor in no more than 80 words whether to lower, hike or leave interest rates on hold. You speak obliquely with a technocratic tone."
                 bm2 = "You are a business tycoon on the Reserve Bank Board. Make a recommendation to the governor in no more than 80 words whether to lower, hike or leave interest rates on hold. You speak directly with a callous tone"
                 bm3 = "You are a compassionate advocate for families and workers on the Reserve Bank Board. Make a recommendation to the governor in no more than 80 words whether to lower, hike or leave interest rates on hold. You speak modestly with a sympathetic tone."
-
+                st.write(st.session_state.prompt)
                 show_conversation(bm1, performance_df, 'bm1')
+                st.write(st.session_state.prompt)
                 show_conversation(bm2, performance_df, 'bm2')
+                st.write(st.session_state.prompt)
                 show_conversation(bm3, performance_df, 'bm3')
                 st.session_state.meeting = True
         if st.session_state.meeting == True:
