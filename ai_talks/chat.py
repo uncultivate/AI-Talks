@@ -666,10 +666,10 @@ if st.session_state.inplay:
 if st.session_state.inplay and st.session_state.count == 1:
     st.info(st.session_state.news[0], icon="📰")
     time.sleep(0.3)
-    # st.info(st.session_state.news[1], icon="📰")
-    # time.sleep(0.3)
-    # st.info(st.session_state.news[2], icon="📰")
-    # time.sleep(0.3)
+    st.info(st.session_state.news[1], icon="📰")
+    time.sleep(0.3)
+    st.info(st.session_state.news[2], icon="📰")
+    time.sleep(0.3)
 if st.session_state.inplay:
     if st.session_state['interest_rate'][-1] == st.session_state['interest_rate'][-2]:
         decision = 'hold'
@@ -745,7 +745,7 @@ if st.session_state.inplay:
             write_news(np1, performance_df)
             write_news(np2, performance_df, angle2)
             write_news(np3, performance_df, angle1)
-            
+
             # Generate some major random event
         
         if len(st.session_state['minor_events_list']) > 0 and st.session_state.count <= 6:
