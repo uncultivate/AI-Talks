@@ -768,7 +768,7 @@ if st.session_state.inplay:
         if st.session_state.count > 1:
             st.warning(st.session_state.special_event, icon="🌏")
             # Other news
-            st.info(st.session_state.news[0], icon="📰")
+            st.info(st.session_state.messages[0][0], icon="📰")
             time.sleep(0.3)
             # st.info(st.session_state.news[1], icon="📰")
             # time.sleep(0.3)
