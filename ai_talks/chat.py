@@ -724,16 +724,16 @@ if st.session_state.inplay:
                 st.session_state.meeting = True
         if st.session_state.meeting == True:
             st.write("Board Member Milton Keynesian: Eminent Economist")
-            st.session_state.generated[0]
+            st.session_state.generated[0][0]
             
             
             st.write("Board Member Clarissa Vanthorn: Business Tycoon")
-            st.session_state.generated[1]
+            st.session_state.generated[1][0]
             
             
             
             st.write("Board Member Ella Fairbrook: Social Campaigner")
-            st.session_state.generated[2]
+            st.session_state.generated[2][0]
             st.divider()
             st.write("Board meeting adjourned! Now the interest rates decision is in the Governor's hands alone.")
     if st.session_state.decision_made:
