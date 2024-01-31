@@ -790,6 +790,8 @@ if st.session_state.inplay:
             st.session_state.generated[2][0]
             st.divider()
             st.write("Board meeting adjourned! Now the interest rates decision is in the Governor's hands alone.")
+    st.write(st.session_state.decision_made)
+    st.write(st.session_state.newsprint)
     if st.session_state.decision_made:
         if st.session_state.newsprint == False:
             st.subheader(f'Month {st.session_state.count}')
