@@ -373,6 +373,7 @@ def raise_50():
     st.session_state.interest_rate.append(st.session_state.interest_rate[-1] + 0.5)
     st.session_state.decision_made = True
     st.session_state.intra_updates = False
+    clear_chat() 
 
 def raise_25():  
     update_economic_indicators(0.25, {
@@ -389,6 +390,7 @@ def raise_25():
     st.session_state.interest_rate.append(st.session_state.interest_rate[-1] + 0.25)
     st.session_state.decision_made = True
     st.session_state.intra_updates = False
+    clear_chat() 
 
 def koh():
     update_economic_indicators(0, {
@@ -404,6 +406,7 @@ def koh():
     st.session_state.interest_rate.append(st.session_state.interest_rate[-1])
     st.session_state.decision_made = True
     st.session_state.intra_updates = False
+    clear_chat() 
 
 def lower_25():
     update_economic_indicators(-0.25, {
@@ -420,6 +423,7 @@ def lower_25():
     st.session_state.interest_rate.append(st.session_state.interest_rate[-1] - 0.25)
     st.session_state.decision_made = True
     st.session_state.intra_updates = False
+    clear_chat() 
 
 def lower_50():
     update_economic_indicators(-0.50, {
@@ -436,6 +440,7 @@ def lower_50():
     st.session_state.interest_rate.append(st.session_state.interest_rate[-1] - 0.5)
     st.session_state.decision_made = True
     st.session_state.intra_updates = False
+    clear_chat() 
 
 if (st.session_state.realistic == True or st.session_state.randomised == True) and st.session_state.count <= 12:
     st.session_state.inplay = True
@@ -982,4 +987,4 @@ if st.session_state.decision_made and st.session_state.intra_updates:
     st.session_state.meeting = False
     st.session_state.decision_made = False 
     st.session_state.intra_updates = False
-    clear_chat()  
+     
