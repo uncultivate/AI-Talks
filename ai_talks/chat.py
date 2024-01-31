@@ -822,15 +822,15 @@ if st.session_state.inplay:
             st.session_state.newsprint = True
         
 
-        if st.session_state.count > 1:
-            st.warning(st.session_state.special_event, icon="🌏")
-            # Other news
-            st.info(st.session_state.messages[0]["content"][0].strip('\"'), icon="📰")
-            time.sleep(0.3)
-            st.info(st.session_state.messages[1]["content"][0].strip('\"'), icon="📰")
-            time.sleep(0.3)
-            st.info(st.session_state.messages[2]["content"][0].strip('\"'), icon="📰")
-            time.sleep(0.3)
+    if st.session_state.count > 1:
+        st.warning(st.session_state.special_event, icon="🌏")
+        # Other news
+        st.info(st.session_state.messages[0]["content"][0].strip('\"'), icon="📰")
+        time.sleep(0.3)
+        st.info(st.session_state.messages[1]["content"][0].strip('\"'), icon="📰")
+        time.sleep(0.3)
+        st.info(st.session_state.messages[2]["content"][0].strip('\"'), icon="📰")
+        time.sleep(0.3)
 
 
 
