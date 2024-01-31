@@ -465,11 +465,14 @@ if st.session_state.inplay:
 
     def click_button():
         st.session_state.button = not st.session_state.button
+    
+    button_text = 'Click me'
 
-    st.button('Click me', on_click=click_button)
+    st.sidebar.button(button_text, on_click=click_button)
 
     if st.session_state.button:
         # The message and nested widget will remain on the page
+        button_text = 'return me'
         st.write('Button is on!')
         st.slider('Select a value')
     else:
