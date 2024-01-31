@@ -13,6 +13,8 @@ import numpy as np
 import random
 import math
 import time
+import matplotlib.pyplot as plt
+import networkx as nx
 
 
 # --- PATH SETTINGS ---
@@ -459,38 +461,55 @@ if st.session_state.inplay:
     st.sidebar.button("Lower 50 points", on_click=lower_50, type="primary")
     st.sidebar.divider()
 
-    # Text and URL for the About The Chair page
-
-    def atc():
-        st.write('Test time')
-
-    st.sidebar.button("About The Chair", on_click=atc, type="secondary")
-    if 'button' not in st.session_state:
-        st.session_state.button = False
+    # About The Chair page
 
     # Function to toggle the button state
     def click_button():
         st.session_state.button = not st.session_state.button
         # Update the button text based on the current state
         if st.session_state.button:
-            st.session_state.button_text = "Hide"
+            st.session_state.button_text = "Hide About"
         else:
-            st.session_state.button_text = "Click me"
+            st.session_state.button_text = "About The Chair"
 
     # Initialize session state variables if they don't exist
     if 'button' not in st.session_state:
         st.session_state.button = False
 
     if 'button_text' not in st.session_state:
-        st.session_state.button_text = "Click me"
+        st.session_state.button_text = "About The Chair"
 
     # Create the button with dynamic text
     st.sidebar.button(st.session_state.button_text, on_click=click_button)
 
     if st.session_state.button:
+        # Creating a directed graph
+        G = nx.DiGraph()
+
+        # Adding nodes with labels
+        G.add_node("Rise")
+        G.add_node("A")
+        G.add_node("B")
+
+        # Adding edges
+        G.add_edge("Rise", "A")
+        G.add_edge("Rise", "B")
+
+        # Drawing the graph
+        pos = nx.spring_layout(G)  # positions for all nodes
         # The message and nested widget will remain on the page
-        st.write('Button is on!')
-        st.slider('Select a value')
+        plt.figure(figsize=(8, 6))
+
+        # Drawing the nodes with the specified shapes and colors, ensuring text is centered
+        nx.draw_networkx_nodes(G, pos, node_shape='s', node_color=node_colors, node_size=7000)
+        nx.draw_networkx_labels(G, pos, font_size=20, font_family="sans-serif", verticalalignment='center', horizontalalignment='center')
+
+        # Drawing the edges with specified colors and thickness
+        nx.draw_networkx_edges(G, pos, edgelist=[("Rise", "A")], arrowstyle="->", arrowsize=20, width=3, edge_color="red")
+        nx.draw_networkx_edges(G, pos, edgelist=[("Rise", "B")], arrowstyle="->", arrowsize=20, width=1, edge_color="green")
+
+        plt.axis("off")
+        plt.show()
     else:
         st.write('Button is off!')
     
