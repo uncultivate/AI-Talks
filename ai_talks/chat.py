@@ -468,49 +468,32 @@ if st.session_state.inplay:
     if 'button' not in st.session_state:
         st.session_state.button = False
 
+    # Function to toggle the button state
     def click_button():
         st.session_state.button = not st.session_state.button
-    
-    button_text = 'Click me'
-    def button_change():
-        button_text = 'return me'
+        # Update the button text based on the current state
+        if st.session_state.button:
+            st.session_state.button_text = "Hide"
+        else:
+            st.session_state.button_text = "Click me"
 
-    st.sidebar.button(button_text, on_click=click_button)
+    # Initialize session state variables if they don't exist
+    if 'button' not in st.session_state:
+        st.session_state.button = False
+
+    if 'button_text' not in st.session_state:
+        st.session_state.button_text = "Click me"
+
+    # Create the button with dynamic text
+    st.sidebar.button(st.session_state.button_text, on_click=click_button)
 
     if st.session_state.button:
         # The message and nested widget will remain on the page
-        
         st.write('Button is on!')
         st.slider('Select a value')
     else:
         st.write('Button is off!')
     
-    def display_input_row(index):
-        left, middle, right = st.columns(3)
-        left.text_input('First', key=f'first_{index}')
-        middle.text_input('Middle', key=f'middle_{index}')
-        right.text_input('Last', key=f'last_{index}')
-
-    if 'rows' not in st.session_state:
-        st.session_state['rows'] = 0
-
-    def increase_rows():
-        st.session_state['rows'] += 1
-
-    st.button('Add person', on_click=increase_rows)
-
-    for i in range(st.session_state['rows']):
-        display_input_row(i)
-
-    # Show the results
-    st.subheader('People')
-    for i in range(st.session_state['rows']):
-        st.write(
-            f'Person {i+1}:',
-            st.session_state[f'first_{i}'],
-            st.session_state[f'middle_{i}'],
-            st.session_state[f'last_{i}']
-        )
 
 
     # st.sidebar.header('Quantitative Easing')
@@ -784,12 +767,11 @@ if st.session_state.inplay:
         if st.session_state.meeting == True:
             st.write("Board Member Milton Keynesian: Eminent Economist")
             st.session_state.generated[0][0]
-            
+            st.divider()
             
             st.write("Board Member Clarissa Vanthorn: Business Tycoon")
             st.session_state.generated[1][0]
-            
-            
+            st.divider()
             
             st.write("Board Member Ella Fairbrook: Social Campaigner")
             st.session_state.generated[2][0]
