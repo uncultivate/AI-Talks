@@ -30,9 +30,8 @@ PAGE_TITLE: str = "The Chair"
 PAGE_ICON: str = "💸"
 LANG_EN: str = "En"
 AI_MODEL_OPTIONS: list[str] = [
-    "gpt-3.5-turbo",
-    "gpt-4",
-    "gpt-4-32k",
+    "gpt-5-mini",
+    "gpt-5",
 ]
 
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
@@ -483,35 +482,16 @@ if st.session_state.inplay:
     st.sidebar.button(st.session_state.button_text, on_click=click_button)
 
     if st.session_state.button:
-        # Creating a directed graph
-        G = nx.DiGraph()
+        st.markdown("""
+        <div style='text-align: left;'>
+        <h2>About The Chair
+        <h3>RBA Simulation Overview</h3>
+        <p>This simulation places you in the role of the Governor of the Reserve Bank of Australia (RBA), giving you the responsibility to shape monetary policy by adjusting the official cash rate. Each month, you can choose to raise, lower, or keep the interest rate on hold. Your decisions directly influence key metrics such as GDP, inflation, unemployment, consumer sentiment, house prices, government debt, imports, exports, and the ASX 200. For example, lowering the cash rate tends to stimulate economic growth and boost the stock market and consumer sentiment, but it can also increase inflationary pressures. Conversely, raising rates can curb inflation but may slow GDP growth or increase unemployment, so every choice has a ripple effect throughout the macroeconomy.</p>
+    
+        <p>To support your decision-making, you can call a board meeting at any time. During these meetings, you'll receive advice from three board members, each offering a distinct viewpoint: an eminent economist who speaks obliquely with a technocratic tone, a business tycoon who is direct and callous, and a compassionate advocate for families and workers who is modest and sympathetic. Reviewing their recommendations can help you weigh potential trade-offs and align your policy actions with the broader economic landscape. Engage thoughtfully, as your leadership will be assessed after twelve months based on the outcomes of your monetary decisions.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-        # Adding nodes with labels
-        G.add_node("Rise")
-        G.add_node("A")
-        G.add_node("B")
-
-        # Adding edges
-        G.add_edge("Rise", "A")
-        G.add_edge("Rise", "B")
-
-        # Drawing the graph
-        pos = nx.spring_layout(G)  # positions for all nodes
-        # The message and nested widget will remain on the page
-        plt.figure(figsize=(8, 6))
-
-        # Drawing the nodes with the specified shapes and colors, ensuring text is centered
-        nx.draw_networkx_nodes(G, pos, node_shape='s', node_color=node_colors, node_size=7000)
-        nx.draw_networkx_labels(G, pos, font_size=20, font_family="sans-serif", verticalalignment='center', horizontalalignment='center')
-
-        # Drawing the edges with specified colors and thickness
-        nx.draw_networkx_edges(G, pos, edgelist=[("Rise", "A")], arrowstyle="->", arrowsize=20, width=3, edge_color="red")
-        nx.draw_networkx_edges(G, pos, edgelist=[("Rise", "B")], arrowstyle="->", arrowsize=20, width=1, edge_color="green")
-
-        plt.axis("off")
-        plt.show()
-    else:
-        st.write('Button is off!')
     
 
 
@@ -637,7 +617,7 @@ st.title("The Chair")
 # Show a welcome message
 if st.session_state.count == 1 and not st.session_state.inplay:
     st.divider()
-    st.subheader("~~~~~ Letter From The Treasury ~~~~~")
+    st.subheader("~~~~~ Letter From The Treasurer ~~~~~")
     st.write("_Congratulations on your appointment as the new Governor of the Reserve Bank of Australia. Your ascendancy to this role during such a challenging time, although unorthodox, shows the trust the Government has in your capabilities and their willingness to fill the role with a fresh face, untarnished by past monetary blunders._")
     st.write("_As you step into this position, remember that the stewardship of Australia's monetary policy is a path laden with immense responsibilities and public scrutiny. The missteps of the past serve as stark reminders that even the most seasoned leaders can falter under the weight of unpredictability that governs global and domestic markets._")
     st.write("_With this in mind, embrace prudence as you set the cash rate each month. Keep a keen eye on the key economic metrics, the news of the day and be guided by the wisdom of the Bank's board members. Your decisions will not only shape the immediate economic fortunes of Australia but will also set the course for long-term stability and growth._")
@@ -769,35 +749,56 @@ if st.session_state.inplay:
     performance_df = pd.DataFrame(parsed_data, columns=["Economic Indicator", "Current Value", "Change"])
     
     def main() -> None:
-    # c1, c2 = st.columns(2)
-    # with c1, c2:
-    #     c1.selectbox(label=st.session_state.locale.select_placeholder1, key="model", options=AI_MODEL_OPTIONS)
+        st.sidebar.selectbox(label=st.session_state.locale.select_placeholder1, key="model", options=AI_MODEL_OPTIONS)
     
         if st.session_state.meeting == False:
             st.write(f'Ready to convene the {int_to_month(st.session_state.count)} Reserve Bank board meeting?')
             if st.button(f'Call to Order', type="primary"):
+                # Clear any previous generated responses
+                if 'generated' not in st.session_state or st.session_state.meeting == False:
+                    st.session_state.generated = []
+                
                 bm1 = "You are an eminent economist on the Reserve Bank Board. Make a recommendation to the governor in no more than 80 words whether to lower, hike or leave interest rates on hold. You speak obliquely with a technocratic tone."
                 bm2 = "You are a business tycoon on the Reserve Bank Board. Make a recommendation to the governor in no more than 80 words whether to lower, hike or leave interest rates on hold. You speak directly with a callous tone"
                 bm3 = "You are a compassionate advocate for families and workers on the Reserve Bank Board. Make a recommendation to the governor in no more than 80 words whether to lower, hike or leave interest rates on hold. You speak modestly with a sympathetic tone."
-                show_conversation(bm1, performance_df, 'bm1')
-                show_conversation(bm2, performance_df, 'bm2')
-                show_conversation(bm3, performance_df, 'bm3')
+                
+                with st.spinner("Convening board meeting and gathering recommendations..."):
+                    show_conversation(bm1, performance_df, 'bm1')
+                    show_conversation(bm2, performance_df, 'bm2')
+                    show_conversation(bm3, performance_df, 'bm3')
+                
                 st.session_state.meeting = True
+                st.rerun()
         if st.session_state.meeting == True:
-            st.write("Board Member Milton Keynesian: Eminent Economist")
-            st.session_state.generated[0][0]
-            st.divider()
+            # Display board member responses from generated list
+            board_members = [
+                ("Board Member Milton Keynesian: Eminent Economist", 0),
+                ("Board Member Clarissa Vanthorn: Business Tycoon", 1),
+                ("Board Member Ella Fairbrook: Social Campaigner", 2),
+            ]
             
-            st.write("Board Member Clarissa Vanthorn: Business Tycoon")
-            st.session_state.generated[1][0]
-            st.divider()
+            for label, idx in board_members:
+                st.write(label)
+                # Debug: show generated list length
+                if 'generated' not in st.session_state:
+                    st.session_state.generated = []
+                
+                if len(st.session_state.generated) > idx:
+                    content = st.session_state.generated[idx]
+                    # Handle both string and list formats
+                    if isinstance(content, list) and len(content) > 0:
+                        st.write(content[0])
+                    elif isinstance(content, str) and content:
+                        st.write(content)
+                    else:
+                        st.info("Awaiting response...")
+                else:
+                    st.info(f"Awaiting response... (generated has {len(st.session_state.generated)} items)")
+                st.divider()
             
-            st.write("Board Member Ella Fairbrook: Social Campaigner")
-            st.session_state.generated[2][0]
-            st.divider()
             st.write("Board meeting adjourned! Now the interest rates decision is in the Governor's hands alone.")
-    st.write(st.session_state.decision_made)
-    st.write(st.session_state.newsprint)
+    #st.write(st.session_state.decision_made)
+    #st.write(st.session_state.newsprint)
     if st.session_state.decision_made:
         if st.session_state.newsprint == False:
             st.subheader(f'Month {st.session_state.count}')
@@ -830,13 +831,19 @@ if st.session_state.inplay:
 
     if st.session_state.count > 1:
         st.warning(st.session_state.special_event, icon="🌏")
-        # Other news
-        st.info(st.session_state.messages[0]["content"][0].strip('\"'), icon="📰")
-        time.sleep(0.3)
-        st.info(st.session_state.messages[1]["content"][0].strip('\"'), icon="📰")
-        time.sleep(0.3)
-        st.info(st.session_state.messages[2]["content"][0].strip('\"'), icon="📰")
-        time.sleep(0.3)
+        # Other news - handle both string and list content formats
+        for i in range(min(3, len(st.session_state.messages))):
+            msg_content = st.session_state.messages[i].get("content", "")
+            if isinstance(msg_content, list) and len(msg_content) > 0:
+                content = msg_content[0]
+            elif isinstance(msg_content, str):
+                content = msg_content
+            else:
+                content = ""
+            
+            if content:
+                st.info(content.strip('\"'), icon="📰")
+                time.sleep(0.3)
 
 
 
@@ -865,7 +872,8 @@ def run_agi():
             menu_icon="cast",
             default_index=0,
             orientation="horizontal",
-            styles=FOOTER_STYLES
+            styles=FOOTER_STYLES,
+            key="footer_menu_inplay"
         )
         match selected_footer:
             case st.session_state.locale.footer_option0:
@@ -906,7 +914,8 @@ def run_agi():
         menu_icon="cast",
         default_index=0,
         orientation="horizontal",
-        styles=FOOTER_STYLES
+        styles=FOOTER_STYLES,
+        key="footer_menu_final"
         )
         match selected_footer:
             case st.session_state.locale.footer_option3:                
@@ -963,7 +972,15 @@ def run_agi():
             case st.session_state.locale.footer_option4:
                 plot_final()
             case st.session_state.locale.footer_option5:
-                "Text Goes Here"
+                        st.markdown("""
+                            <div style='text-align: left;'>
+                            <h2>About The Chair
+                            <h3>RBA Simulation Overview</h3>
+                            <p>This simulation places you in the role of the Governor of the Reserve Bank of Australia (RBA), giving you the responsibility to shape monetary policy by adjusting the official cash rate. Each month, you can choose to raise, lower, or keep the interest rate on hold. Your decisions directly influence key metrics such as GDP, inflation, unemployment, consumer sentiment, house prices, government debt, imports, exports, and the ASX 200. For example, lowering the cash rate tends to stimulate economic growth and boost the stock market and consumer sentiment, but it can also increase inflationary pressures. Conversely, raising rates can curb inflation but may slow GDP growth or increase unemployment, so every choice has a ripple effect throughout the macroeconomy.</p>
+                        
+                            <p>To support your decision-making, you can call a board meeting at any time. During these meetings, you'll receive advice from three board members, each offering a distinct viewpoint: an eminent economist who speaks obliquely with a technocratic tone, a business tycoon who is direct and callous, and a compassionate advocate for families and workers who is modest and sympathetic. Reviewing their recommendations can help you weigh potential trade-offs and align your policy actions with the broader economic landscape. Engage thoughtfully, as your leadership will be assessed after twelve months based on the outcomes of your monetary decisions.</p>
+                            </div>
+                            """, unsafe_allow_html=True)
 
 
 

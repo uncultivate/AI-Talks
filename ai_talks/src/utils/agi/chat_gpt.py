@@ -1,5 +1,7 @@
 import logging
 import os
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import List  # NOQA: UP035
 
@@ -80,13 +82,51 @@ def _get_openai_api_key() -> str:
 client = OpenAI(api_key=_get_openai_api_key())
 
 
-@st.cache_data()
-def loading_data(ai_model: str, messages: List[dict]) -> dict:
-    logging.info(f"{messages=}")
+def loading_data(ai_model: str, messages: List[dict], *, max_completion_tokens: int = 2056, temperature: float = 1.0) -> dict:
+    """Load chat completion data from OpenAI API. Not cached to ensure fresh responses.
+    
+    Note: GPT-5 models use reasoning tokens, so we need more tokens to allow for both
+    reasoning and actual output. 512 tokens should be sufficient for short responses.
+    """
+    start = time.perf_counter()
     chat_completion = client.chat.completions.create(
         messages=messages,
         model=ai_model,
+        max_completion_tokens=max_completion_tokens,
+        temperature=temperature,
     )
-    logging.info(f"{chat_completion=}")
+    duration = time.perf_counter() - start
+    logging.info("openai.chat.completions.create duration: %.2fs", duration)
     return chat_completion
+
+
+def loading_data_many(ai_model: str, bm_to_messages: dict, *, max_completion_tokens: int = 2056, temperature: float = 1.0) -> dict:
+    """Execute multiple chat completion requests concurrently.
+
+    bm_to_messages maps a key (e.g. 'bm1') to its messages list.
+    Returns a mapping of the same keys to the completion objects.
+    """
+    results: dict = {}
+    start_all = time.perf_counter()
+
+    def _call(messages: List[dict]):
+        return client.chat.completions.create(
+            messages=messages,
+            model=ai_model,
+            max_completion_tokens=max_completion_tokens,
+            temperature=temperature,
+        )
+
+    with ThreadPoolExecutor(max_workers=min(8, max(1, len(bm_to_messages)))) as executor:
+        future_to_key = {executor.submit(_call, msgs): key for key, msgs in bm_to_messages.items()}
+        for future in as_completed(future_to_key):
+            key = future_to_key[future]
+            try:
+                results[key] = future.result()
+            except Exception as exc:  # noqa: BLE001
+                logging.exception("OpenAI call failed for %s: %s", key, exc)
+                results[key] = None
+
+    logging.info("parallel completions duration: %.2fs", time.perf_counter() - start_all)
+    return results
 
